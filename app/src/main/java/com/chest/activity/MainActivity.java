@@ -122,12 +122,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (ConnectionUtil.isOnline(this)) {
                     if (!isChestClicked) {
                         isChestClicked = true;
-                        imgChest.setBackgroundDrawable(null);
                         long timeCurrent = System.currentTimeMillis();
                         long durationOpenChest = timeCurrent - timeClickChest;
                         long timeToOpenChest = durationOpenChest / (60 * 60 * 1000);
                         long minuteLeft = 60 - ((durationOpenChest / (60 * 1000)));
                         if (timeToOpenChest >= Config.DURATION_TO_OPEN_CHEST || timeClickChest == 0) {
+                            imgChest.setBackgroundDrawable(null);
                             animationDrawable = new CustomAnimationDrawable((AnimationDrawable) getResources().getDrawable(
                                     R.drawable.chest_animtion_open)) {
                                 @Override
