@@ -3,4 +3,4 @@
     android:id="@+id/imgCard"
     android:background="#ABD0BC"
     android:layout_width="wrap_content"
-    android:layout_height="140dp" />
+    android:layout_height="135dp" />
