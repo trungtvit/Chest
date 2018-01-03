@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.chest.R;
 import com.chest.constant.Config;
+import com.chest.constant.ItemClickListener;
 import com.chest.model.Card;
 
 import java.util.List;
@@ -17,10 +18,13 @@ import java.util.List;
  */
 
 public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ViewHolder> {
-    List<Card> cardList;
 
-    public ListCardAdapter(List<Card> cardList) {
+    private List<Card> cardList;
+    private ItemClickListener itemClickListener;
+
+    public ListCardAdapter(List<Card> cardList, ItemClickListener itemClickListener) {
         this.cardList = cardList;
+        this.itemClickListener = itemClickListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -42,8 +46,15 @@ public class ListCardAdapter extends RecyclerView.Adapter<ListCardAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Card card = cardList.get(position);
+        final Card card = cardList.get(position);
         holder.imgCard.setImageResource(Config.listCard[card.getCardNumber()]);
+
+        holder.imgCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemClickListener.onItemClick(card.getCardId());
+            }
+        });
     }
 
     @Override

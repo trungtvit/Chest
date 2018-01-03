@@ -24,7 +24,7 @@ import java.util.Random;
  * Created by TrungTV on 01/03/2018.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView imgChest;
     private ImageView imgCard;
@@ -58,9 +58,36 @@ public class MainActivity extends AppCompatActivity {
         timeClickChest = sharePref.getTimeClickChest();
         saveCardToDatabase();
 
-        imgChest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        imgChest.setOnClickListener(this);
+        tvStore.setOnClickListener(this);
+
+    }
+
+    private int randomCard() {
+        int min = 0;
+        int max = Config.MAX_CARD - 1;
+        Random r = new Random();
+        int i = r.nextInt(max - min + 1) + min;
+        cardNumber = i;
+        sharePref.saveCardNumber(cardNumber);
+        return i;
+    }
+
+    private void saveCardToDatabase() {
+        timeToSave = timeOpenApp - timeClickChest;
+        long time24Hours = timeToSave / (60 * 60 * 1000);
+        Log.e("OKMEN", time24Hours + "-------");
+        if (time24Hours >= Config.DURATION_TO_SAVE_DB) {
+            int cardNumber = sharePref.getCardNumber();
+            Card card = new Card(cardNumber);
+            handler.addCard(card);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imgChest:
                 sharePref.saveTimeClickChest(System.currentTimeMillis());
                 animationDrawable = new CustomAnimationDrawable((AnimationDrawable) getResources().getDrawable(
                         R.drawable.chest_animtion)) {
@@ -79,37 +106,14 @@ public class MainActivity extends AppCompatActivity {
                 };
                 v.setBackgroundDrawable(animationDrawable);
                 animationDrawable.start();
-            }
-        });
-
-        tvStore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,ListCardActivity.class);
+                break;
+            case R.id.imgCard:
+                Intent intent = new Intent(MainActivity.this, ListCardActivity.class);
                 startActivity(intent);
-            }
-        });
-
-    }
-
-    private int randomCard() {
-        int min = 0;
-        int max = Config.MAX_CARD - 1;
-        Random r = new Random();
-        int i = r.nextInt(max - min + 1) + min;
-        cardNumber = i;
-        sharePref.saveCardNumber(cardNumber);
-        return i;
-    }
-
-    private void saveCardToDatabase() {
-        timeToSave = timeOpenApp - timeClickChest;
-        long time24Hours = timeToSave / (60 * 60 * 1000);
-        Log.e("OKMEN", time24Hours + "-------");
-        if (time24Hours >= 24) {
-            int cardNumber = sharePref.getCardNumber();
-            Card card = new Card(cardNumber);
-            handler.addCard(card);
+                break;
+            default:
+                    /*TODO*/
+                break;
         }
     }
 }

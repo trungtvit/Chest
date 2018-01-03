@@ -8,6 +8,10 @@ import android.animation.TimeInterpolator;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+/**
+ * Created by TrungTV on 01/03/2018.
+ */
+
 public class ScaleInAnimation extends Animation implements Combinable {
 
     TimeInterpolator interpolator;

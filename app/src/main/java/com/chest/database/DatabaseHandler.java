@@ -63,8 +63,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    /*Getting single card*/
-    public Card getCard(int id) {
+    /*Getting single card by card id*/
+    public Card getCardById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_CARD, new String[]{KEY_CARD_ID,
