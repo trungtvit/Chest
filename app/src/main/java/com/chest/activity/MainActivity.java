@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chest.R;
+import com.chest.constant.BackupAndRestoreDB;
 import com.chest.constant.Config;
 import com.chest.customviews.CustomAnimationDrawable;
 import com.chest.customviews.ScaleInAnimation;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         timeOpenApp = System.currentTimeMillis();
 
         handler = new DatabaseHandler(this);
+
         sharePref = new SharePref(this);
 
         imgChest = findViewById(R.id.imgChest);
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         timeToSave = timeOpenApp - timeClickChest;
         long time24Hours = timeToSave / (60 * 60 * 1000);
         Log.e("OKMEN", time24Hours + "-------");
-        if (time24Hours >= Config.DURATION_TO_SAVE_DB) {
+        if (time24Hours >= Config.DURATION_TO_SAVE_DB && timeClickChest != 0) {
             int cardNumber = sharePref.getCardNumber();
             Card card = new Card(cardNumber);
             handler.addCard(card);
@@ -88,28 +90,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imgChest:
-                sharePref.saveTimeClickChest(System.currentTimeMillis());
-                animationDrawable = new CustomAnimationDrawable((AnimationDrawable) getResources().getDrawable(
-                        R.drawable.chest_animtion)) {
-                    @Override
-                    public void onAnimationFinish() {
-                        animationDrawable.stop();
-                        imgChest.setOnClickListener(null);
-                        imgCard.setBackgroundResource(Config.listCard[randomCard()]);
-                        new ScaleInAnimation(imgCard).setDuration(500).animate();
-                    }
-
-                    @Override
-                    public void onAnimationStart() {
-
-                    }
-                };
-                v.setBackgroundDrawable(animationDrawable);
-                animationDrawable.start();
+//                sharePref.saveTimeClickChest(System.currentTimeMillis());
+//                animationDrawable = new CustomAnimationDrawable((AnimationDrawable) getResources().getDrawable(
+//                        R.drawable.chest_animtion)) {
+//                    @Override
+//                    public void onAnimationFinish() {
+//                        animationDrawable.stop();
+//                        imgChest.setOnClickListener(null);
+//                        imgCard.setBackgroundResource(Config.listCard[randomCard()]);
+//                        new ScaleInAnimation(imgCard).setDuration(500).animate();
+//                    }
+//
+//                    @Override
+//                    public void onAnimationStart() {
+//
+//                    }
+//                };
+//                v.setBackgroundDrawable(animationDrawable);
+//                animationDrawable.start();
+                BackupAndRestoreDB backupAndRestoreDB = new BackupAndRestoreDB(this);
+                backupAndRestoreDB.restoreDb();
                 break;
-            case R.id.imgCard:
+            case R.id.tvStore:
                 Intent intent = new Intent(MainActivity.this, ListCardActivity.class);
                 startActivity(intent);
+
                 break;
             default:
                     /*TODO*/
