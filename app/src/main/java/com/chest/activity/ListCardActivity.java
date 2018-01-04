@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 
 import com.chest.R;
 import com.chest.adapter.ListCardAdapter;
@@ -38,6 +39,9 @@ public class ListCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_card);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         rcvListCard = findViewById(R.id.rcvListCard);
 
         progressDialog = new ProgressDialog(this, R.style.MyTheme);
@@ -54,6 +58,16 @@ public class ListCardActivity extends AppCompatActivity {
 
         new GetListCard().execute();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class GetListCard extends AsyncTask<Void, Void, List<Card>> {

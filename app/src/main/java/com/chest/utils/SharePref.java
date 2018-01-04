@@ -23,18 +23,9 @@ public class SharePref {
         editor.commit();
     }
 
-    public void saveCardNumber(int cardNumber) {
-        editor.putInt(Config.KEY_CARD_NUMBER, cardNumber);
-        editor.commit();
-    }
-
     public long getTimeClickChest() {
         long timeClickChest = preferences.getLong(Config.KEY_TIME_CLICK_CHEST, 0);
         return timeClickChest;
     }
 
-    public int getCardNumber() {
-        int cardNumber = preferences.getInt(Config.KEY_CARD_NUMBER, 0);
-        return cardNumber;
-    }
 }

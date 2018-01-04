@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +30,9 @@ public class CardDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         imgCard = findViewById(R.id.imgCard);
         tvCardIndex = findViewById(R.id.tvCardIndex);
         tvCardName = findViewById(R.id.tvCardName);
@@ -44,6 +48,16 @@ public class CardDetailActivity extends AppCompatActivity {
             cardId = bundle.getInt(Config.KEY_CARD_ID);
             new GetCardDetail().execute(cardId);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class GetCardDetail extends AsyncTask<Integer, Void, Card> {
