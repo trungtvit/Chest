@@ -29,6 +29,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Card Table Columns names
     private static final String KEY_CARD_ID = "id";
     private static final String KEY_CARD_NUMBER = "card_number";
+    private static final String KEY_CARD_NAME = "card_name";
+    private static final String KEY_CARD_INDEX = "card_index";
 
 
     public DatabaseHandler(Context context) {
@@ -40,7 +42,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CARD_TABLE = "CREATE TABLE " + TABLE_CARD + "("
                 + KEY_CARD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + KEY_CARD_NUMBER + " INTEGER" + ")";
+                + KEY_CARD_NUMBER + " INTEGER,"
+                + KEY_CARD_NAME + " TEXT,"
+                + KEY_CARD_INDEX + " INTEGER"
+                + ")";
         db.execSQL(CREATE_CARD_TABLE);
     }
 
@@ -58,6 +63,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_CARD_NUMBER, card.getCardNumber());
+        values.put(KEY_CARD_NAME, card.getCardName());
+        values.put(KEY_CARD_INDEX, card.getCardIndex());
 
         db.insert(TABLE_CARD, null, values);
         db.close();
@@ -68,12 +75,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_CARD, new String[]{KEY_CARD_ID,
-                        KEY_CARD_NUMBER}, KEY_CARD_ID + "=?",
+                        KEY_CARD_NUMBER, KEY_CARD_NAME, KEY_CARD_INDEX}, KEY_CARD_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
-        Card card = new Card(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)));
+        Card card = new Card(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)),cursor.getString(2),Integer.parseInt(cursor.getString(3)));
         return card;
     }
 
@@ -91,6 +98,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Card card = new Card();
                 card.setCardId(Integer.parseInt(cursor.getString(0)));
                 card.setCardNumber(Integer.parseInt(cursor.getString(1)));
+                card.setCardName(cursor.getString(2));
+                card.setCardIndex(Integer.parseInt(cursor.getString(3)));
                 cardList.add(card);
             } while (cursor.moveToNext());
         }

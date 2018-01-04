@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chest.R;
 import com.chest.constant.BackupAndRestoreDB;
@@ -17,6 +18,7 @@ import com.chest.customviews.CustomAnimationDrawable;
 import com.chest.customviews.ScaleInAnimation;
 import com.chest.database.DatabaseHandler;
 import com.chest.model.Card;
+import com.chest.utils.ConnectionUtil;
 import com.chest.utils.SharePref;
 
 import java.util.Random;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvStore;
 
     private CustomAnimationDrawable animationDrawable;
+    private BackupAndRestoreDB backupAndRestoreDB;
     private DatabaseHandler handler;
     private SharePref sharePref;
 
@@ -45,11 +48,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        timeOpenApp = System.currentTimeMillis();
+        if (!ConnectionUtil.isOnline(this)) {
 
+        }
+
+        backupAndRestoreDB = new BackupAndRestoreDB(this);
         handler = new DatabaseHandler(this);
-
         sharePref = new SharePref(this);
+
+        backupAndRestoreDB.restoreDb();
+
+        timeOpenApp = System.currentTimeMillis();
 
         imgChest = findViewById(R.id.imgChest);
         imgCard = findViewById(R.id.imgCard);
@@ -58,10 +67,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imgChest.setBackgroundResource(R.drawable.chest_1);
 
         timeClickChest = sharePref.getTimeClickChest();
+
         saveCardToDatabase();
 
         imgChest.setOnClickListener(this);
         tvStore.setOnClickListener(this);
+
 
     }
 
@@ -81,8 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.e("OKMEN", time24Hours + "-------");
         if (time24Hours >= Config.DURATION_TO_SAVE_DB && timeClickChest != 0) {
             int cardNumber = sharePref.getCardNumber();
-            Card card = new Card(cardNumber);
+            String cardName = Config.listCardName[cardNumber];
+            int cardIndex = Config.listCardIndex[cardNumber];
+            Card card = new Card(cardNumber,cardName,cardIndex);
             handler.addCard(card);
+            backupAndRestoreDB.exportDb();
         }
     }
 
@@ -90,30 +104,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.imgChest:
-//                sharePref.saveTimeClickChest(System.currentTimeMillis());
-//                animationDrawable = new CustomAnimationDrawable((AnimationDrawable) getResources().getDrawable(
-//                        R.drawable.chest_animtion)) {
-//                    @Override
-//                    public void onAnimationFinish() {
-//                        animationDrawable.stop();
-//                        imgChest.setOnClickListener(null);
-//                        imgCard.setBackgroundResource(Config.listCard[randomCard()]);
-//                        new ScaleInAnimation(imgCard).setDuration(500).animate();
-//                    }
-//
-//                    @Override
-//                    public void onAnimationStart() {
-//
-//                    }
-//                };
-//                v.setBackgroundDrawable(animationDrawable);
-//                animationDrawable.start();
-                BackupAndRestoreDB backupAndRestoreDB = new BackupAndRestoreDB(this);
-                backupAndRestoreDB.restoreDb();
+                if (ConnectionUtil.isOnline(this)) {
+                    sharePref.saveTimeClickChest(System.currentTimeMillis());
+                    animationDrawable = new CustomAnimationDrawable((AnimationDrawable) getResources().getDrawable(
+                            R.drawable.chest_animtion)) {
+                        @Override
+                        public void onAnimationFinish() {
+                            animationDrawable.stop();
+                            imgChest.setOnClickListener(null);
+                            imgCard.setBackgroundResource(Config.listCard[randomCard()]);
+                            new ScaleInAnimation(imgCard).setDuration(500).animate();
+                        }
+
+                        @Override
+                        public void onAnimationStart() {
+
+                        }
+                    };
+                    v.setBackgroundDrawable(animationDrawable);
+                    animationDrawable.start();
+
+                } else {
+                    Toast.makeText(this, "Please check the network !", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.tvStore:
-                Intent intent = new Intent(MainActivity.this, ListCardActivity.class);
-                startActivity(intent);
+                if (ConnectionUtil.isOnline(this)) {
+                    Intent intent = new Intent(MainActivity.this, ListCardActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Please check the network !", Toast.LENGTH_SHORT).show();
+                }
 
                 break;
             default:
@@ -121,4 +142,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
 }

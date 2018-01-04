@@ -7,17 +7,23 @@ package com.chest.model;
 public class Card {
     private int cardId;
     private int cardNumber;
+    private String cardName;
+    private int cardIndex;
 
     public Card() {
     }
 
-    public Card(int cardId, int cardNumber) {
+    public Card(int cardId, int cardNumber, String cardName, int cardIndex) {
         this.cardId = cardId;
         this.cardNumber = cardNumber;
+        this.cardName = cardName;
+        this.cardIndex = cardIndex;
     }
 
-    public Card(int cardNumber) {
+    public Card(int cardNumber, String cardName, int cardIndex) {
         this.cardNumber = cardNumber;
+        this.cardName = cardName;
+        this.cardIndex = cardIndex;
     }
 
     public int getCardId() {
@@ -34,5 +40,21 @@ public class Card {
 
     public void setCardNumber(int cardNumber) {
         this.cardNumber = cardNumber;
+    }
+
+    public String getCardName() {
+        return cardName;
+    }
+
+    public void setCardName(String cardName) {
+        this.cardName = cardName;
+    }
+
+    public int getCardIndex() {
+        return cardIndex;
+    }
+
+    public void setCardIndex(int cardIndex) {
+        this.cardIndex = cardIndex;
     }
 }

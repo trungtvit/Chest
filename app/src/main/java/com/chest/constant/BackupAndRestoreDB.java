@@ -63,6 +63,12 @@ public class BackupAndRestoreDB {
 
         if (checkDbExist()) return true;
 
+        File folderDatabase = new File(Environment.getDataDirectory() +
+                "/data/" + packageName +
+                "/databases/");
+        if (!folderDatabase.exists())
+            folderDatabase.mkdirs();
+
         if (!importFile.exists()) {
             Log.d(TAG, "File does not exist");
             return false;

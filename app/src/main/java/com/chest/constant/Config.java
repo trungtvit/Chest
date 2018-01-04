@@ -8,6 +8,8 @@ import com.chest.R;
 
 public class Config {
     public static final int[] listCard = new int[]{R.drawable.card_1, R.drawable.card_2, R.drawable.card_3, R.drawable.card_4, R.drawable.card_5};
+    public static final String[] listCardName = new String[]{"Card 1", "Card 2", "Card 3", "Card 4", "Card 5"};
+    public static final int[] listCardIndex = new int[]{200, 100, 300, 400, 500};
 
     public static final int MAX_CARD = 5;
     public static final int DURATION_TO_SAVE_DB = 24;

@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chest.R;
 import com.chest.constant.Config;
@@ -14,6 +15,8 @@ import com.chest.model.Card;
 public class CardDetailActivity extends AppCompatActivity {
 
     private ImageView imgCard;
+    private TextView tvCardIndex;
+    private TextView tvCardName;
     private ProgressDialog progressDialog;
 
     private DatabaseHandler handler;
@@ -25,7 +28,10 @@ public class CardDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
+
         imgCard = findViewById(R.id.imgCard);
+        tvCardIndex = findViewById(R.id.tvCardIndex);
+        tvCardName = findViewById(R.id.tvCardName);
 
         progressDialog = new ProgressDialog(this, R.style.MyTheme);
         progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
@@ -59,6 +65,8 @@ public class CardDetailActivity extends AppCompatActivity {
         protected void onPostExecute(Card card) {
             super.onPostExecute(card);
             imgCard.setImageResource(Config.listCard[card.getCardNumber()]);
+            tvCardName.setText(Config.listCardName[card.getCardNumber()]);
+            tvCardIndex.setText("Dame " + Config.listCardIndex[card.getCardNumber()]);
 
             if (progressDialog != null && progressDialog.isShowing())
                 progressDialog.dismiss();
