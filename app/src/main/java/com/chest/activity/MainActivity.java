@@ -1,11 +1,14 @@
 package com.chest.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView imgChest;
     private ImageView imgCard;
     private TextView tvStore;
+    private AlertDialog.Builder dialogConnection;
 
     private CustomAnimationDrawable animationDrawable;
     private BackupAndRestoreDB backupAndRestoreDB;
@@ -48,9 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (!ConnectionUtil.isOnline(this)) {
-
-        }
+        checkNetwork();
 
         backupAndRestoreDB = new BackupAndRestoreDB(this);
         handler = new DatabaseHandler(this);
@@ -97,6 +99,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Card card = new Card(cardNumber,cardName,cardIndex);
             handler.addCard(card);
             backupAndRestoreDB.exportDb();
+        }
+    }
+
+    private void checkNetwork(){
+        if (!ConnectionUtil.isOnline(this)) {
+            dialogConnection = new AlertDialog.Builder(this);
+            dialogConnection.setTitle("Network Error");
+            dialogConnection.setMessage("Check the network and try again");
+            dialogConnection.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    checkNetwork();
+                }
+            });
+
+            dialogConnection.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    System.exit(0);
+                }
+            });
+            dialogConnection.show();
         }
     }
 
