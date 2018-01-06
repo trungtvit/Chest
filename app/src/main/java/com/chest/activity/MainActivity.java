@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             animationDrawable.start();
                         } else {
                             Toast.makeText(this, minuteLeft + " minutes remaining", Toast.LENGTH_SHORT).show();
+                            isChestClicked = false;
                         }
                     }
                 } else {
