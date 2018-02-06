@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void checkNetwork() {
         if (!ConnectionUtil.isOnline(this)) {
             dialogConnection = new AlertDialog.Builder(this);
+            dialogConnection.setCancelable(false);
             dialogConnection.setTitle("Network Error");
             dialogConnection.setMessage("Check the network and try again");
             dialogConnection.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
